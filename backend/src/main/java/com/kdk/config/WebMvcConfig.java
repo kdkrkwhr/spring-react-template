@@ -15,5 +15,4 @@ public class WebMvcConfig {
   public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
       return new JpaTransactionManager(entityManagerFactory);
   }
-
 }

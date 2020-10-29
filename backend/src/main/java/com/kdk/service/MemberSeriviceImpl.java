@@ -29,7 +29,7 @@ public class MemberSeriviceImpl implements MemberSerivice {
   public List<Member> selectMemberList() {
     QMember member = QMember.member;
     JPAQuery<Member> query = new JPAQuery<>(em);
-    return query.select(member).from(member).fetch();
+    return query.select(member).from(member).where().fetch();
   }
 
   @Override
