@@ -1,2 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:log4jdbc:mysql://localhost:3306/kdkdb?useUnicode=true&characterEncoding=utf8&useSSL=false
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    username: root
+    password: root
+  jpa: 
+    database: mysql
+    generate-ddl: true
+    show-sql: true
+
 server:
-  port: 8888
+  port: 8082
