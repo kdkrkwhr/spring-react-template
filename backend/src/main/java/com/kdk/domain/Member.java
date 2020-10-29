@@ -1,20 +1,23 @@
 package com.kdk.domain;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Setter
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
+@Getter
+@Entity
+@Table(name="TB_MEMBER")
 public class Member implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -23,7 +26,9 @@ public class Member implements Serializable {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long idx;
 
+  @Column
   private String memberId;
+  @Column
   private String memberPwd;
 
   public Member(String memberId, String memberPwd) {
