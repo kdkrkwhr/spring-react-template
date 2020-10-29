@@ -1,12 +1,12 @@
-package com.team;
+package com.kdk;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TeamStudyApplication {
+public class KdkTemplateApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(TeamStudyApplication.class, args);
+    SpringApplication.run(KdkTemplateApplication.class, args);
   }
 }
