@@ -8,6 +8,12 @@ spring:
     database: mysql
     generate-ddl: true
     show-sql: true
+  thymeleaf:
+    cache: false
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+    view-names: thymeleaf/*
 
 server:
   port: 8082
