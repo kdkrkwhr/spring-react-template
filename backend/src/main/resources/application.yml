@@ -4,6 +4,8 @@ spring:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     username: root
     password: root
+  liquibase:
+    change-log: classpath:/schema/changelog-master.xml
   jpa: 
     database: mysql
     generate-ddl: true

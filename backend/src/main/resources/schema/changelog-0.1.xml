@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet author="kdk" id="table-init-0.1">
+		<createTable tableName="TB_MEMBER">
+			<column name="idx" autoIncrement="true" type="INT">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="member_id" type="VARCHAR(50)">
+				<constraints nullable="false" unique="true" />
+			</column>
+			<column name="member_pwd" type="VARCHAR(200)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet author="kdk" id="data-insert-0.2">
+		<insert tableName="TB_MEMBER">
+			<column name="member_id" value="kdk01" />
+			<column name="member_pwd" value="admin" />
+		</insert>
+		<insert tableName="TB_MEMBER">
+			<column name="member_id" value="kdk02" />
+			<column name="member_pwd" value="1234" />
+		</insert>
+		<insert tableName="TB_MEMBER">
+			<column name="member_id" value="kdk03" />
+			<column name="member_pwd" value="1234" />
+		</insert>
+	</changeSet>
+
+</databaseChangeLog>

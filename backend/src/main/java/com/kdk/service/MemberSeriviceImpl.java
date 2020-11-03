@@ -11,25 +11,19 @@ import org.springframework.stereotype.Service;
 import com.kdk.domain.Member;
 import com.kdk.domain.QMember;
 import com.kdk.repository.MemberRepository;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.core.BooleanBuilder;
 
 @Service
 public class MemberSeriviceImpl implements MemberSerivice {
 
   static final Logger logger = LoggerFactory.getLogger(MemberSeriviceImpl.class);
 
-  @PersistenceContext
-  private EntityManager em;
-
   @Autowired
   private MemberRepository repository;
 
   @Override
   public List<Member> selectMemberList() {
-    QMember member = QMember.member;
-    JPAQuery<Member> query = new JPAQuery<>(em);
-    return query.select(member).from(member).where().fetch();
+    return repository.findAll();
   }
 
   @Override
@@ -61,6 +55,8 @@ public class MemberSeriviceImpl implements MemberSerivice {
     int result;
 
     try {
+
+      
       result = 1;
 
     } catch (Exception e) {

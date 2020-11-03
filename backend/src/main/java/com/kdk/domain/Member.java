@@ -26,7 +26,7 @@ public class Member implements Serializable {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long idx;
 
-  @Column
+  @Column(name = "member_id", nullable = true)
   private String memberId;
   @Column
   private String memberPwd;
