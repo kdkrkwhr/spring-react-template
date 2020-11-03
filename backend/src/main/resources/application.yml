@@ -16,13 +16,18 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
     view-names: thymeleaf/*
-  security:  
-    oauth2:  
-      client:  
-        clientId: 856610290889-kub4iuarh5fqn2h27ubui22n13mcfcid.apps.googleusercontent.com
-        clientSecret: QgWg3vah1Y4jMdJfSC0oG8c8
-  profiles:
-    include: oauth
+  security: 
+    oauth2: 
+      client: 
+        clientId: Client Id
+        clientSecret: Secret Id
+        registration:
+          google:
+            client-id: Client Id
+            client-secret: Secret Id
+            scope:
+            - profile
+            - email
 
 server:
   port: 8082
