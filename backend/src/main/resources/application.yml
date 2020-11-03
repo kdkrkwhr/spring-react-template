@@ -19,15 +19,10 @@ spring:
   security: 
     oauth2: 
       client: 
-        clientId: Client Id
-        clientSecret: Secret Id
         registration:
           google:
-            client-id: Client Id
-            client-secret: Secret Id
-            scope:
-            - profile
-            - email
+            client-id: ClientId
+            client-secret: SecretId
 
 server:
   port: 8082

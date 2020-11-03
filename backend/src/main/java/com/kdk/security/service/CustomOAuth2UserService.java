@@ -1,4 +1,4 @@
-package com.kdk.security.config;
+package com.kdk.security.service;
 
 import java.util.Collections;
 import javax.servlet.http.HttpSession;
@@ -10,8 +10,10 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import com.kdk.security.User;
-import com.kdk.security.UserRepository;
+import com.kdk.security.domain.OAuthAttributesDto;
+import com.kdk.security.domain.SessionUserDto;
+import com.kdk.security.domain.UserDto;
+import com.kdk.security.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -31,20 +33,20 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
         .getUserInfoEndpoint().getUserNameAttributeName();
 
-    OAuthAttributes attributes =
-        OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+    OAuthAttributesDto attributes =
+        OAuthAttributesDto.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-    User user = saveOrUpdate(attributes);
+    UserDto user = saveOrUpdate(attributes);
 
-    httpSession.setAttribute("user", new SessionUser(user));
+    httpSession.setAttribute("user", new SessionUserDto(user));
 
     return new DefaultOAuth2User(
         Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),
         attributes.getAttributes(), attributes.getNameAttributeKey());
   }
 
-  private User saveOrUpdate(OAuthAttributes attributes) {
-    User user = userRepository.findByEmail(attributes.getEmail())
+  private UserDto saveOrUpdate(OAuthAttributesDto attributes) {
+    UserDto user = userRepository.findByEmail(attributes.getEmail())
         .map(entity -> entity.update(attributes.getName(), attributes.getPicture()))
         .orElse(attributes.toEntity());
 

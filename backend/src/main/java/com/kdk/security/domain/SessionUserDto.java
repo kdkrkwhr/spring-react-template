@@ -1,16 +1,15 @@
-package com.kdk.security.config;
+package com.kdk.security.domain;
 
 import java.io.Serializable;
-import com.kdk.security.User;
 import lombok.Getter;
 
 @Getter
-public class SessionUser implements Serializable {
+public class SessionUserDto implements Serializable {
   private String name;
   private String email;
   private String picture;
 
-  public SessionUser(User user) {
+  public SessionUserDto(UserDto user) {
     this.name = user.getName();
     this.email = user.getEmail();
     this.picture = user.getPicture();

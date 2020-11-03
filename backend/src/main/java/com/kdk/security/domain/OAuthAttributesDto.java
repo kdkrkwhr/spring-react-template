@@ -1,13 +1,11 @@
-package com.kdk.security.config;
+package com.kdk.security.domain;
 
 import java.util.Map;
-import com.kdk.security.Role;
-import com.kdk.security.User;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class OAuthAttributes {
+public class OAuthAttributesDto {
   private Map<String, Object> attributes;
   private String nameAttributeKey;
   private String name;
@@ -15,7 +13,7 @@ public class OAuthAttributes {
   private String picture;
 
   @Builder
-  public OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey, String name,
+  public OAuthAttributesDto(Map<String, Object> attributes, String nameAttributeKey, String name,
       String email, String picture) {
     this.attributes = attributes;
     this.nameAttributeKey = nameAttributeKey;
@@ -24,21 +22,21 @@ public class OAuthAttributes {
     this.picture = picture;
   }
 
-  public static OAuthAttributes of(String registrationId, String userNameAttributeName,
+  public static OAuthAttributesDto of(String registrationId, String userNameAttributeName,
       Map<String, Object> attributes) {
 
     return ofGoogle(userNameAttributeName, attributes);
   }
 
-  public static OAuthAttributes ofGoogle(String userNameAttributeName,
+  public static OAuthAttributesDto ofGoogle(String userNameAttributeName,
       Map<String, Object> attributes) {
 
-    return OAuthAttributes.builder().name((String) attributes.get("name"))
+    return OAuthAttributesDto.builder().name((String) attributes.get("name"))
         .email((String) attributes.get("email")).picture((String) attributes.get("picture"))
         .attributes(attributes).nameAttributeKey(userNameAttributeName).build();
   }
 
-  public User toEntity() {
-    return User.builder().name(name).email(email).picture(picture).role(Role.GUEST).build();
+  public UserDto toEntity() {
+    return UserDto.builder().name(name).email(email).picture(picture).role(Role.GUEST).build();
   }
 }

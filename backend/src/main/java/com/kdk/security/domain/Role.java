@@ -1,4 +1,4 @@
-package com.kdk.security;
+package com.kdk.security.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

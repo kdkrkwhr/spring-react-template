@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import com.kdk.security.config.SessionUser;
+import com.kdk.security.domain.SessionUserDto;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -16,7 +16,7 @@ public class MainController {
 
   @RequestMapping(value = "/", method = RequestMethod.GET)
   public String index(Model model) {
-    SessionUser user = (SessionUser) httpSession.getAttribute("user");
+    SessionUserDto user = (SessionUserDto) httpSession.getAttribute("user");
 
     if (user != null) {
       model.addAttribute("userName", user.getName());
