@@ -1,16 +1,16 @@
-spring:
-  datasource:
+spring: 
+  datasource: 
     url: jdbc:log4jdbc:mysql://localhost:3306/kdkdb?useUnicode=true&characterEncoding=utf8&useSSL=false
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     username: root
     password: root
-  liquibase:
+  liquibase: 
     change-log: classpath:/schema/changelog-master.xml
   jpa: 
     database: mysql
     generate-ddl: true
     show-sql: true
-  thymeleaf:
+  thymeleaf: 
     cache: false
     mode: HTML
     prefix: classpath:/templates/
@@ -19,10 +19,13 @@ spring:
   security: 
     oauth2: 
       client: 
-        registration:
-          google:
+        registration: 
+          google: 
             client-id: ClientId
             client-secret: SecretId
+
+open-api: 
+  key: ServiceKey
 
 server:
   port: 8082
