@@ -18,7 +18,7 @@ public class OpenTSDBScheduler {
   @Scheduled(fixedDelay = 1000 * 60)
   public void minuteInsertDataScheduled() throws Exception {
     logger.debug("=== START :: minuteInsertDataScheduled ===");
-    logger.debug("Result :: {}", service.openTSDataInsert("kdk.test", System.currentTimeMillis(), 4));
+    logger.debug("Result :: {}", service.minuteScheduleF(System.currentTimeMillis()));
     logger.debug("=== END :: minuteInsertDataScheduled ===");
   }
 }

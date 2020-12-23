@@ -10,11 +10,6 @@ public class DefaultScheduler {
 
   static final Logger logger = LoggerFactory.getLogger(DefaultScheduler.class);
 
-  @Scheduled(fixedDelay = 1000 * 60)
-  public void minuteScheduled() throws Exception {
-    logger.debug("=== START :: minuteScheduled ===");
-  }
-
   @Scheduled(cron = "0 0 01 * * ?")
   public void amOneClockScheduled() throws Exception {
     logger.debug("=== START :: amOneClockScheduled ===");

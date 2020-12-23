@@ -25,7 +25,21 @@ spring:
             client-secret: SecretId
 
 open-api: 
-  key: ServiceKey
+  key: openApiKey
 
 server:
   port: 8082
+
+logging:
+  level:
+    root: OFF # OFF or INFO
+    org.springframework.web: DEBUG
+    com.kdk: DEBUG
+
+restTemplate:
+  factory:
+    readTimeout: 10000 
+    connectTimeout: 6000
+  httpClient:
+    maxConnTotal: 100
+    maxConnPerRoute: 5

@@ -1,7 +1,9 @@
 package com.kdk.service;
 
+import java.io.FileReader;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,21 +14,26 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.json.JSONException;
-import org.json.JSONObject;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.kdk.util.CommonConstant;
 
 @Service
 public class RealTimeService {
+
+  static final Logger logger = LoggerFactory.getLogger(RealTimeService.class);
 
   @Value("${open-api.key}")
   private String apiKey;
@@ -39,16 +46,15 @@ public class RealTimeService {
     return nValue.getNodeValue();
   }
 
-  public Map<String, Object> trafficAPiCall(long timestamp) throws Exception {
-    Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
+  public List<Map<String, Object>> airportAPiCall(String airportCode) throws Exception {
     String url = CommonConstant.OPEN_API_DOMAIN + CommonConstant.OPEN_API_TYPE 
-        + "?serviceKey=" + apiKey;
+        + "?serviceKey=" + apiKey + "&schAirportCode=" + airportCode;
 
     DocumentBuilderFactory dbFactoty = DocumentBuilderFactory.newInstance();
     DocumentBuilder dBuilder = dbFactoty.newDocumentBuilder();
     Document doc = dBuilder.parse(url);
 
-    NodeList nList = doc.getElementsByTagName("list");
+    NodeList nList = doc.getElementsByTagName("item");
 
     List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 
@@ -58,21 +64,19 @@ public class RealTimeService {
         Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
 
         Element eElement = (Element) nNode;
-        dataMap.put("trafficAmout", getTagValue("trafficAmout", eElement)); // 교통량
-        dataMap.put("speed", getTagValue("speed", eElement)); // 속도
-        dataMap.put("routeNo", getTagValue("routeNo", eElement)); // 노선번호
-        dataMap.put("routeName", getTagValue("routeName", eElement)); // 도로명
+        dataMap.put("parkingAirportCodeName", getTagValue("parkingAirportCodeName", eElement)); // 주차장명
+        dataMap.put("parkingTotalSpace", getTagValue("parkingTotalSpace", eElement)); // 전체 주차면 수
+        dataMap.put("parkingOccupiedSpace", getTagValue("parkingOccupiedSpace", eElement)); // 입고된 차량 수
 
         dataList.add(dataMap);
       }
     }
 
-    resultMap.put("data", dataList);
-
-    return resultMap;
+    return dataList;
   }
 
   public int openTSDataInsert(String metric, long timestamp, int value, JSONObject tags) throws JSONException {
+    int result = 0;
     RestTemplate restTemplate = new RestTemplate();
     URI url = URI.create(CommonConstant.TSDB_DOMAIN + CommonConstant.TSDB_TYPE_PUT + "?details");
 
@@ -84,16 +88,22 @@ public class RealTimeService {
 
     HttpHeaders headers = new HttpHeaders();
     headers.add("Accept", "*/*");
-    headers.add("Content-Type", "application/json;charset=UTF-8");
 
-    HttpEntity<JSONObject> entity = new HttpEntity<JSONObject>(jsonReq, headers);
+    HttpEntity<String> entity = new HttpEntity<String>(jsonReq.toString(), headers);
     ResponseEntity<String> res = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
-    Gson gson = new Gson();
-    TypeToken<Map<String, Object>> typeToken = new TypeToken<Map<String, Object>>() {};
-    Map<String, Object> resBody = gson.fromJson(res.getBody(), typeToken.getType());
+    return (res.getStatusCode() == HttpStatus.OK) ? 1 : 0;
+  }
 
-    return Integer.parseInt(resBody.get("success").toString());
+  public JSONArray getAirportJsonArrayDatas() throws Exception {
+    JSONParser jsonParser = new JSONParser();
+    ClassPathResource resource = new ClassPathResource("static/json/airport_parking_data.json");
+    
+    Object obj = jsonParser.parse(new FileReader(resource.getFile()));
+    JSONObject jsonObject = (JSONObject) obj;
+    JSONArray datas = (JSONArray) jsonObject.get("datas");
+
+    return datas;
   }
 
   public int minuteScheduleF(long timestamp) {
@@ -101,8 +111,20 @@ public class RealTimeService {
 
     try {
 
-      trafficAPiCall(timestamp);
-      result = 1;
+      JSONObject tags = new JSONObject();
+      tags.put("host", "kdk");
+
+      JSONArray datas = getAirportJsonArrayDatas();
+
+      for (int i = 0; i < datas.size(); i++) {
+        JSONObject data = (JSONObject) ((JSONObject) datas.get(i));
+        List<Map<String, Object>> apiDatas = airportAPiCall(data.get("airportCode").toString());
+
+        for (Map<String, Object> apiData : apiDatas) {
+          String metric = "kdk." + data.get("airportCode") + "";
+          result =+ openTSDataInsert(metric, timestamp, Integer.parseInt(apiData.get("parkingOccupiedSpace").toString()), tags);
+        }
+      }
 
     } catch(Exception e) {
       result = 0;
