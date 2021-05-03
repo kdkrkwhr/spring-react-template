@@ -1,1 +1,11 @@
-rootProject.name = 'backend'
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
+rootProject.name = 'backend'// root Name
+include 'app:api-server' // API 서버
+include 'app:api-serverB' // API 서버
+include 'app:common' // 공통 처리 모듈
+include 'lib:redis' // Redis 처리 모듈 Lib
+include 'lib:kafka' // Kafka 처리 모듈 Lib

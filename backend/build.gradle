@@ -1,62 +1,32 @@
 plugins {
-	id 'org.springframework.boot' version '2.3.3.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
-	id 'java'
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
+    id 'java'
 }
 
 group = 'com.kdk'
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'com.kdk'
+    sourceCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compile('org.projectlombok:lombok')
+        annotationProcessor 'org.projectlombok:lombok'
+    }
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    implementation 'org.projectlombok:lombok'
-
-    implementation 'mysql:mysql-connector-java:5.1.46'
-    implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16'
-
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'com.querydsl:querydsl-jpa:4.1.4'
-
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
-
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
-	compile group: 'org.json', name: 'json', version: '20090211'
-	implementation 'com.google.code.gson:gson:2.8.5'
-	compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
-
-	implementation "org.liquibase:liquibase-core:3.10.1", {
-    	exclude group: "ch.qos.logback", module: "logback-classic"
-    }
-
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
-}
-
-test {
-	useJUnitPlatform()
-}
-
-def querydslDir = "$buildDir/generated/querydsl"
-
-querydsl {
-    jpa = true
-    querydslSourcesDir = querydslDir
-}
-sourceSets {
-    main.java.srcDir querydslDir
-}
-configurations {
-    querydsl.extendsFrom compileClasspath
-}
-compileQuerydsl {
-    options.annotationProcessorPath = configurations.querydsl
 }
